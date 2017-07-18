@@ -63,9 +63,16 @@ define python::pyvenv (
 
   if $ensure == 'present' {
 
-    $virtualenv_cmd = $version ? {
-      'system' => "${python::exec_prefix}pyvenv",
-      default  => "${python::exec_prefix}pyvenv-${version}",
+    if $version == "system" and $::python_version =~ /^3\.[3567]/ {
+        $virtualenv_cmd = $version ? {
+          'system' => "${python::exec_prefix}python -m venv",
+          default  => "${python::exec_prefix}python${version} -m venv",
+        }
+    } else {
+        $virtualenv_cmd = $version ? {
+          'system' => "${python::exec_prefix}pyvenv",
+          default  => "${python::exec_prefix}pyvenv-${version}",
+        }
     }
 
     if ( $systempkgs == true ) {
