@@ -13,7 +13,7 @@ class python::params {
   $provider               = undef
   $valid_versions = $::osfamily ? {
     'RedHat' => ['3','27','33'],
-    'Debian' => ['3', '3.3', '2.7'],
+    'Debian' => ['3', '3.3', '3.4', '3.5', '2.7'],
     'Suse'   => [],
     'Gentoo' => ['2.7', '3.3', '3.4', '3.5']
   }
