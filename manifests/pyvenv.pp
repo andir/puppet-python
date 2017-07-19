@@ -63,16 +63,13 @@ define python::pyvenv (
 
   if $ensure == 'present' {
 
-    if $version == "system" and $::python_version =~ /^3\.[3567]/ {
-        $virtualenv_cmd = $version ? {
-          'system' => "${python::exec_prefix}python -m venv",
-          default  => "${python::exec_prefix}python${version} -m venv",
-        }
-    } else {
-        $virtualenv_cmd = $version ? {
-          'system' => "${python::exec_prefix}pyvenv",
-          default  => "${python::exec_prefix}pyvenv-${version}",
-        }
+	if $::python3_version < '3.3' {
+		fail("python <3.3 does not support pyvenv")
+	}
+
+    $venv_cmd = $version ? {
+      'system' => "${python::exec_prefix}python3 -m venv",
+      default  => "${python::exec_prefix}python${version} -m venv",
     }
 
     if ( $systempkgs == true ) {
@@ -89,7 +86,7 @@ define python::pyvenv (
     }
 
     exec { "python_virtualenv_${venv_dir}":
-      command     => "${virtualenv_cmd} --clear ${system_pkgs_flag} ${venv_dir}",
+      command     => "${venv_cmd} --clear ${system_pkgs_flag} ${venv_dir}",
       user        => $owner,
       creates     => "${venv_dir}/bin/activate",
       path        => $path,

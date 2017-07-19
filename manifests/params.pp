@@ -8,6 +8,7 @@ class python::params {
   $pip                    = 'present'
   $dev                    = 'absent'
   $virtualenv             = 'absent'
+  $pyvenv				  = 'absent'
   $gunicorn               = 'absent'
   $manage_gunicorn        = true
   $provider               = undef

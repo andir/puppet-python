@@ -40,11 +40,13 @@ class python::install {
     default => $python::pip,
   }
 
-  $venv_ensure = $python::virtualenv ? {
+  $virtualenv_ensure = $python::virtualenv ? {
     true    => 'present',
     false   => 'absent',
     default => $python::virtualenv,
   }
+
+  $venv_ensure = $python::venv
 
   package { 'python':
     ensure => $python::ensure,
@@ -52,8 +54,20 @@ class python::install {
   }
 
   package { 'virtualenv':
-    ensure  => $venv_ensure,
+    ensure  => $virtualenv_ensure,
     require => Package['python'],
+  }
+
+  $venv_package = $::operatingsystem ? {
+    'Debian' => 'python3-venv',
+    default => false,
+  }
+
+  if $venv_package != false {
+    package { 'python-venv':
+      ensure => $venv_ensure,
+      name   => $venv_pacakge,
+    }
   }
 
   case $python::provider {
@@ -118,7 +132,7 @@ class python::install {
 
       # This gets installed as a dependency anyway
       # package { "${python::version}-python-virtualenv":
-      #   ensure  => $venv_ensure,
+      #   ensure  => $virtualenv_ensure,
       #   require => Package['scl-utils'],
       # }
       package { "${python}-scldevel":
@@ -192,7 +206,7 @@ class python::install {
             Class['epel'] -> Package['pip']
           }
         }
-        if ($venv_ensure != 'absent') and ($::operatingsystemrelease =~ /^6/) {
+        if ($virtualenv_ensure != 'absent') and ($::operatingsystemrelease =~ /^6/) {
           if $python::use_epel == true {
             include 'epel'
             Class['epel'] -> Package['virtualenv']

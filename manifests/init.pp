@@ -72,6 +72,7 @@ class python (
   $pip                       = $python::params::pip,
   $dev                       = $python::params::dev,
   $virtualenv                = $python::params::virtualenv,
+  $pyvenv                    = $python::params::pyvenv,
   $gunicorn                  = $python::params::gunicorn,
   $manage_gunicorn           = $python::params::manage_gunicorn,
   $gunicorn_package_name     = $python::params::gunicorn_package_name,
@@ -116,6 +117,8 @@ class python (
   } else {
     validate_re($virtualenv, ['^(absent|present|latest)$'])
   }
+
+  validate_re($pyvenv, ['^(absent|present|latest)$'])
 
   if $gunicorn == false or $gunicorn == true {
     warning('Use of boolean values for the $gunicorn parameter is deprecated')
