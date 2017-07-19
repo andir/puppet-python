@@ -66,7 +66,7 @@ class python::install {
   if $venv_package != false {
     package { 'python-venv':
       ensure => $venv_ensure,
-      name   => $venv_pacakge,
+      name   => $venv_package,
     }
   }
 
